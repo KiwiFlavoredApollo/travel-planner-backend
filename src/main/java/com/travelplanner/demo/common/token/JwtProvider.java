@@ -49,19 +49,17 @@ public class JwtProvider {
 
     public String getUserIdFromAccessToken(String accessToken) {
         Claims claims = Jwts.parser()
-                .verifyWith((javax.crypto.SecretKey) secretKey)
-                .build()
-                .parseSignedClaims(accessToken)
-                .getPayload();
+                .setSigningKey(secretKey)
+                .parseClaimsJws(accessToken)
+                .getBody();
         return claims.getSubject();
     }
 
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
-                    .verifyWith((javax.crypto.SecretKey) secretKey)
-                    .build()
-                    .parseSignedClaims(token);
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token);
             return true;
         } catch (Exception e) {
             return false;
