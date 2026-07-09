@@ -35,6 +35,8 @@ public class UserController {
     @SecurityRequirement(name = "") // 공개 API
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
+        System.out.println(">>>> debug user controller register");
+        System.out.println(">>>> debug params : "+request); 
         UserResponse response = userService.register(request);
 
         if (response != null) {
