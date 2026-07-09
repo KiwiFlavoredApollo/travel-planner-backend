@@ -32,7 +32,7 @@ import static org.mockito.Mockito.doNothing;
 
 @SpringBootTest
 @Transactional
-class DemoApplicationTests {
+class IsolatedIntegrationTest {
 
     @Autowired
     private UserService userService;
