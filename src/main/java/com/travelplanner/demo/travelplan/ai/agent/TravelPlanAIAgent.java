@@ -29,7 +29,7 @@ public class TravelPlanAIAgent {
 
     public TravelPlanResponse generateTravelPlan(TravelPlanRequest request) {
         log.debug(">>>> travel plan agent multi-step generation start");
-        
+
         String requiredDestinations = request.getDestinations().stream()
                 .map(DestinationRequest::getKeyword)
                 .collect(Collectors.joining(", "));
@@ -51,8 +51,7 @@ public class TravelPlanAIAgent {
 
     private CandidatePlaceResponse listUpCandidatePlaces(
             TravelPlanRequest request,
-            String requiredDestinations
-    ) {
+            String requiredDestinations) {
         return chatClient.prompt()
                 .system("""
                         너는 여행 후보 장소를 고르는 역할이다.
@@ -89,16 +88,14 @@ public class TravelPlanAIAgent {
                         request.getArea(),
                         request.getStartDate(),
                         request.getEndDate(),
-                        requiredDestinations
-                ))
+                        requiredDestinations))
                 .call()
                 .entity(CandidatePlaceResponse.class);
     }
 
     private DraftScheduleResponse makeDraftSchedule(
             TravelPlanRequest request,
-            CandidatePlaceResponse candidates
-    ) {
+            CandidatePlaceResponse candidates) {
         return chatClient.prompt()
                 .system("""
                         너는 여행 일정을 시간순으로 배치하는 역할이다.
@@ -113,13 +110,13 @@ public class TravelPlanAIAgent {
                         - 후보 장소: %s
 
                         일정 작성 규칙
-                        1. 하루 일정은 별도 입력이 없으면 10:20:00 기준으로 작성한다.
+                        1. 하루 일정은 별도 입력이 없으면 10:00:00 기준으로 작성한다.
                         2. 가까운 곳, 이동이 쉬운 곳 순서로 배치한다.
                         3. 각 장소의 체류시간을 현실적으로 반영한다.
                         4. 이동 항목을 반드시 일정에 포함한다.
                         5. 이동 항목은 "A -> B 이동 (교통수단 N분)" 형식으로 작성한다.
-                        6. 점심은 12:13:30 사이에 반드시 포함한다.
-                        7. 저녁은 17:19:00 사이에 반드시 포함한다.
+                        6. 점심은 12:00-13:30 사이에 반드시 포함한다.
+                        7. 저녁은 17:00 -19:00 사이에 반드시 포함한다.
                         8. 식사 항목은 "점심-식당명" 또는 "저녁-식당명" 형식으로 작성한다.
                         9. 영업시간이나 휴무일이 불확실한 장소는 무리한 시간대에 배치하지 않는다.
                         10. 같은 장소를 불필요하게 반복하지 않는다.
@@ -129,7 +126,7 @@ public class TravelPlanAIAgent {
                           "items": [
                             {
                               "date": "2026-07-11",
-                              "time": "10:30",
+                              "time": "10:00",
                               "place": "국립중앙박물관"
                             },
                             {
@@ -148,16 +145,14 @@ public class TravelPlanAIAgent {
                         request.getArea(),
                         request.getStartDate(),
                         request.getEndDate(),
-                        candidates
-                ))
+                        candidates))
                 .call()
                 .entity(DraftScheduleResponse.class);
     }
 
     private TravelPlanResponse finalizeSchedule(
             TravelPlanRequest request,
-            DraftScheduleResponse draftSchedule
-    ) {
+            DraftScheduleResponse draftSchedule) {
         return chatClient.prompt()
                 .system("""
                         너는 여행 일정 JSON을 최종 검수하는 역할이다.
@@ -198,9 +193,9 @@ public class TravelPlanAIAgent {
                         request.getArea(),
                         request.getStartDate(),
                         request.getEndDate(),
-                        draftSchedule
-                ))
+                        draftSchedule))
                 .call()
                 .entity(TravelPlanResponse.class);
     }
+
 }
