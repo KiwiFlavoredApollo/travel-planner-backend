@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import com.travelplanner.demo.travelplan.dto.TravelPlanRequest;
 import com.travelplanner.demo.travelplan.dto.TravelPlanResponse;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.travelplanner.demo.destination.dto.DestinationRequest;
@@ -51,8 +52,8 @@ public class TravelPlanAIAgent {
                             - 여행 종료일 : "%s"
                             - 필수 방문지 : "%s"
                             1. 동선을 고려할 것.
-                            2. 전체 계획의 시작은 항상 여행지로 도착일 것(공항, 역 등)
-                            3. 전체 계획의 끝은 항상 여행지에서 출발일 것(공항, 역 등)
+                            2. 계획의 시작은 항상 여행지로 도착일 것(공항, 역 등)
+                            3. 계획의 끝은 항상 여행지에서 출발일 것(공항, 역 등)
                             4. 필수 여행지를 첫 순서로 배치할 필요는 없으며, 여러번 방문할 필요도 없음
                             5. 일과 중 반드시 아침, 점심 저녁 식사가 포함되어야 하며, 정확한 식당명을 응답할 것.
                             6. 일과의 마무리는 항상 숙소여야 함. 정확한 숙소 명을 응답할 것.
