@@ -98,16 +98,16 @@ public class TravelPlanController {
     }
 
     @Operation(summary = "개별 여행지 수정", description = "타임라인에서 특정 목적지 카드 하나를 수정합니다. (JWT 인증 필요)")
-    @PutMapping("/destination/{destinationId}")
+    @PutMapping("/{travelPlanId}/destination")
     public ResponseEntity<?> updateDestination(
-            @Parameter(description = "목적지 ID", example = "1", required = true) @PathVariable Integer destinationId,
+            @Parameter(description = "여행 계획 ID", example = "1", required = true) @PathVariable Integer travelPlanId,
             @Valid @RequestBody com.travelplanner.demo.destination.dto.DestinationUpdateRequest request) {
         String userId = getCurrentUserId();
         if (userId == null) {
             return ResponseEntity.status(401).build();
         }
         try {
-            travelPlanService.updateDestination(destinationId, userId, request);
+            travelPlanService.updateDestination(travelPlanId, userId, request);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

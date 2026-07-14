@@ -112,10 +112,19 @@ public class TravelPlanService {
         travelPlanRepository.delete(travelPlan);
     }
 
-    public void updateDestination(Integer destinationId, String userId, DestinationUpdateRequest request) {
-        DestinationEntity destination = destinationRepository.findByIdAndTravelPlan_User_UserId(destinationId, userId)
-                .orElseThrow(
-                        () -> new IllegalArgumentException("Destination not found or access denied: " + destinationId));
+    public void updateDestination(Integer travelPlanId, String userId, DestinationUpdateRequest request) {
+        // 여행 계획 소유자 확인
+        TravelPlanEntity travelPlan = travelPlanRepository.findByIdAndUser_UserId(travelPlanId, userId)
+                .orElseThrow(() -> new IllegalArgumentException("Travel plan not found or access denied: " + travelPlanId));
+
+        // 목적지 ID로 검색
+        DestinationEntity destination = destinationRepository.findById(request.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Destination not found: " + request.getId()));
+
+        // 해당 목적지가 이 여행 계획에 속하는지 확인
+        if (!destination.getTravelPlan().getId().equals(travelPlanId)) {
+            throw new IllegalArgumentException("Destination does not belong to this travel plan");
+        }
 
         destination.setPlace(request.getPlace());
         if (request.getDate() != null) {
