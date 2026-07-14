@@ -3,8 +3,10 @@ package com.travelplanner.demo.destination.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
-import java.util.Collections;
 import java.util.List;
+
+import com.travelplanner.demo.destination.entity.DestinationEntity;
+import com.travelplanner.demo.travelplan.entity.TravelPlanEntity;
 
 @Getter
 @Setter
@@ -14,6 +16,9 @@ import java.util.List;
 @ToString
 @Schema(description = "여행지 요청 (키워드 기반)")
 public class DestinationRequest {
+    
+    @Schema(description = "여행지 ID", example = "1")
+    private Integer id;
 
     @Schema(description = "검색 키워드 목록", example = "[\"경복궁\", \"북촌한옥마을\"]", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotEmpty(message = "At least one keyword is required")
@@ -24,4 +29,14 @@ public class DestinationRequest {
 
     @Schema(description = "방문 시간 (HH:mm:ss)", example = "10:00:00")
     private String time;
+
+    public DestinationEntity toEntity(TravelPlanEntity travelPlan) {
+        return DestinationEntity.builder()
+                .id(this.id)
+                .travelPlan(travelPlan)
+                .date(this.date)
+                .time(this.time)
+                .place(this.keywords != null && !this.keywords.isEmpty() ? String.join(", ", this.keywords) : "")
+                .build();
+    }
 }
