@@ -46,7 +46,7 @@ public class TravelPlanAIAgent {
         // 시스템 프롬프트: JSON 형식으로 결과 출력 지시
         TravelPlanResponse response = chatClient.prompt()
                 .system("""
-                                반드시 json 형태로 응답
+                                반드시 json 형态로 응답
                         """)
                 .user("""
                             너는 여행지에 따라 상세계획을 짜주는 전문가
@@ -81,9 +81,9 @@ public class TravelPlanAIAgent {
                                 ]
                             }
                         """.formatted(
-                                request.getArea(), 
-                                request.getStartDate(), 
-                                request.getEndDate(), 
+                                request.getArea(),
+                                request.getStartDate(),
+                                request.getEndDate(),
                                 request.getDestinations().stream()
                                     .flatMap(dr -> dr.getKeywords().stream())
                                     .collect(Collectors.joining(", ")),
